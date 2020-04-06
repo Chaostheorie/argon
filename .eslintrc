@@ -1,0 +1,9 @@
+<span data-ccp-props="{"201341983":0,"335559739":160,"335559740":259}">{
+  "extends": "airbnb-base",
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "jquery": true
+  }
+}
+</span>

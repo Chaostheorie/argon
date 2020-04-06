@@ -1,0 +1,22 @@
+/*
+ * Globals
+ */
+
+
+@media (min-width: 48em) {
+  html {
+    font-size: 18px;
+  }
+}
+
+html {
+  font-family: 'Titillium Web', sans-serif;
+}
+
+hr {
+   border-top: 1px solid #2E2E2E;
+}
+
+.sub {
+  list-style-type: lower-roman;
+}
