@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { RpcClient } from 'jsonrpc-ts';
+const axios = require('axios');
 const url = "https://www.schulerzbistum.de/jsonrpc.php";
-const client = new RpcClient({ url: url });
+
 
 declare global {
   namespace NodeJS {
@@ -58,24 +59,31 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and import them here.
 ipcMain.on("log-in", async function log_in(event: any, args: any) {
 let has_error = false;
-try {
-  let response = await client.makeRequest({
-  method: 'login',
-  params: {login: args["e-mail"], password: args["password"]},
-  id: 1,
-  jsonrpc: '2.0',
-    });
-  const data = response.data.result;
-  if (data.return === "FATAL") {
+let data = JSON.stringify([{
+"jsonrpc": "2.0",
+"id": 1,
+"method": "login",
+"params": {login: args["e-mail"], password: args["password"]}
+}]);
+axios
+.post(url, data)
+.then((result: any) => { try {
+  has_error = true;
+  if (result.data[0].result.return === "FATAL") {
    has_error = true;
   }
- global.response = data;
- global.member = data["member"];
- global.user = data["user"];
-} catch (error) {
+  global.response = result.data[0].result;
+  global.member = result.data[0].result.member;
+  global.user = result.data[0].result.user;
+  has_error = false;
+  } catch(error) {
   console.log(error);
   has_error = true;
-}
+}})
+.catch((error: any) => {
+  console.log(error);
+  has_error = true;
+});
 if (has_error === false) {
   BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/main.html'));
 } else {
