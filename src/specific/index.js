@@ -18,6 +18,11 @@ ipcRenderer.on('form-recieved', function(event, args) {
   $( "#submit" ).text(btntext);
   if (args["has_errors"] == true) {
     $("#has_error").show();
+    setTimeout(function() {$("#has_error").addClass("fadeOut");}, 4000);
+    setTimeout(
+      function () {
+        $("#has_error").hide();
+    }, 4500);
   } else {
     $("#has_error").hide();
   }

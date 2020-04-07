@@ -58,37 +58,37 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 ipcMain.on("log-in", async function log_in(event: any, args: any) {
-let has_error = false;
 let data = JSON.stringify([{
 "jsonrpc": "2.0",
 "id": 1,
 "method": "login",
 "params": {login: args["e-mail"], password: args["password"]}
 }]);
+var fallback;
 axios
 .post(url, data)
-.then((result: any) => { try {
-  has_error = true;
-  if (result.data[0].result.return === "FATAL") {
-   has_error = true;
+.then((result: any) => {
+try {
+  if (result.data[0].result.return != "FATAL") {
+   global.response = result.data[0].result;
+   global.member = result.data[0].result.member;
+   global.user = result.data[0].result.user;
+   BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/main.html'));
+
   }
-  global.response = result.data[0].result;
-  global.member = result.data[0].result.member;
-  global.user = result.data[0].result.user;
-  has_error = false;
-  } catch(error) {
+// fallback
+} catch(error) {
   console.log(error);
-  has_error = true;
+  fallback = true;
 }})
 .catch((error: any) => {
   console.log(error);
-  has_error = true;
+  fallback = true;
 });
-if (has_error === false) {
-  BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/main.html'));
-} else {
+if (fallback) {
   event.sender.send("form-recieved", {"has_errors": true});
-}});
+}
+});
 
 
 app.on('activate', () => {
