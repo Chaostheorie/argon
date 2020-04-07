@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": "dist/main.js",
   "scripts": {
-    "start": "tsc && electron-forge start",
+    "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -36,10 +36,6 @@
         {
           "name": "@electron-forge/maker-deb",
           "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ]
     }
@@ -64,9 +60,9 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "electron-squirrel-startup": "^1.0.0",
-    "jinja-js": "^0.1.8",
     "jquery": "^3.4.1",
-    "node-jsonrpc-client": "^1.0.2"
+    "keytar": "^5.4.0"
   }
 }

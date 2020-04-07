@@ -16,6 +16,7 @@
   },
   "include": [
     "src/**/*",
-    "main.ts"
+    "main.ts",
+    "store.js"
   ]
 }
