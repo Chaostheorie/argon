@@ -22,3 +22,7 @@ To change the used instance edit the url (const) in the main.ts to fit your doma
 - main menu
 - get
 - icon (fas fa-dragon)
+
+## honorable mentions/ Attributions
+
+Menu sidebar design inspired by [Start Bootstrap - Simple Sidebar](https://github.com/BlackrockDigital/startbootstrap-simple-sidebar) from BlackrockDigital.

@@ -26,46 +26,93 @@
 </head>
 <body>
   <!-- Content -->
-  <div class="container mt-4" id="content-container">
-    <div class="row">
-      <h1 id="welcome text-left">Willkommen <span id="username"></span></h1>
+
+  <div class="d-flex toggled" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="list-group list-group-flush sidebar">
+        <a if="profile" class="list-group-item list-group-item-action btn btn-dark elegant-color btn-sidebar">
+          <i class="fas fa-id-card"></i> Profil
+        </a>
+        <a id="presentations" class="list-group-item list-group-item-action  btn btn-sm btn-dark elegant-color btn-sidebar">
+          <i class="fas fa-bars"></i> Präsentieren
+        </a>
+        <a id="notes" class="list-group-item list-group-item-action  btn btn-sm btn-dark elegant-color btn-sidebar">
+          <i class="fas fa-sticky-note"></i> Notizen
+        </a>
+        <a id="bookmark" class="list-group-item list-group-item-action  btn btn-sm btn-dark elegant-color btn-sidebar">
+          <i class="fas fa-bookmark"></i> Lesezeichen
+        </a>
+        <a href="log-out" class="list-group-item list-group-item-action  btn btn-sm btn-dark elegant-color btn-sidebar">
+          <i class="fas fa-lock"></i> Abmelden
+        </a>
+      </div>
     </div>
-    <hr>
-    <div class="row container-fluid">
-      <div class="container">
-        <h3 class="row">
-          <strong><i class="fas fa-tty"></i> Kommunikation</strong>
-        </h3>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container mt-2" id="content-container">
+        <div class="row m-3">
+          <h1 id="welcome text-left">Willkommen <span id="username"></span></h1>
+        </div>
         <hr>
-        <div class="row btn-group">
-          <button type="button" id="quick-messages" class="btn btn-dark elegant-color"><i class="fas fa-comments"></i> Quickmessages</button>
-          <button type="button" id="contacts" class="btn btn-dark elegant-color"><i class="fas fa-address-book"></i> Kontakte</button>
-          <button type="button" id="conferences" class="btn btn-dark elegant-color"><i class="fas fa-chalkboard"></i> Konferenzen</button>
-          <button type="button" id="e-mail" class="btn btn-dark elegant-color"><i class="fas fa-envelope"></i> E-Mail</button>
+        <div class="row container-fluid m-3">
+          <div class="container">
+            <h3 class="row">
+              <strong><i class="fas fa-tty"></i> Kommunikation</strong>
+            </h3>
+            <hr>
+            <div class="row btn-group">
+              <button type="button" id="quick-messages" class="btn btn-dark elegant-color"><i class="fas fa-bolt"></i> Quickmessages</button>
+              <button type="button" id="chat" class="btn btn-dark elegant-color"><i class="fas fa-comments"></i> Chat</button>
+              <button type="button" id="e-mail" class="btn btn-dark elegant-color"><i class="fas fa-envelope"></i> E-Mail</button>
+              <button type="button" id="contacts" class="btn btn-dark elegant-color"><i class="fas fa-address-book"></i> Kontakte</button>
+            </div>
+          </div>
+        </div>
+        <div class="row container-fluid m-3">
+          <div class="container">
+            <h3 class="row">
+              <strong><i class="fas fa-coffee"></i> Produktivität</strong>
+            </h3>
+            <hr>
+            <div class="row btn-group">
+              <button type="button" id="files" class="btn btn-dark elegant-color"><i class="fas fa-folder"></i> Datein</button>
+              <button type="button" id="tasks" class="btn btn-dark elegant-color"><i class="fas fa-clipboard"></i> Aufgaben</button>
+              <button type="button" id="calendar" class="btn btn-dark elegant-color"><i class="fas fa-calendar"></i> Kalendar</button>
+              <button type="button" id="conferences" class="btn btn-dark elegant-color"><i class="fas fa-chalkboard"></i> Konferenzen</button>
+            </div>
+          </div>
+        </div>
+        <div class="row container-fluid m-3">
+          <div class="container">
+            <h3 class="row">
+              <strong><i class="fas fa-chalkboard-teacher"></i> Schule</strong>
+            </h3>
+            <hr>
+            <div class="row btn-group">
+              <button type="button" id="files" class="btn btn-dark elegant-color"><i class="fas fa-graduation-cap"></i> Lernen</button>
+              <button type="button" id="substitution-shedule" class="btn btn-dark elegant-color"><i class="fas fa-th"></i> Vertretungsplan</button>
+              <button type="button" id="pupil-board" class="btn btn-dark elegant-color"><i class="fas fa-thumbtack"></i> Schülerboard</button>
+              <button type="button" id="announcements" class="btn btn-dark elegant-color"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row container-fluid">
-      <div class="container">
-        <h3 class="row">
-          <strong><i class="fas fa-building"></i> Produktivität</strong>
-        </h3>
-        <hr>
-        <div class="row btn-group">
-          <button type="button" id="files" class="btn btn-dark elegant-color"><i class="fas fa-comments"></i> Datein</button>
-          <button type="button" id="tasks" class="btn btn-dark elegant-color"><i class="fas fa-tasks"></i> Aufgaben</button>
-          <button type="button" id="conferences" class="btn btn-dark elegant-color"><i class="fas fa-chalkboard"></i> Konferenzen</button>
-          <button type="button" id="e-mail" class="btn btn-dark elegant-color"><i class="fas fa-envelope"></i> E-Mail</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- /#page-content-wrapper -->
+
+</div>
+</body>
+<!-- /#wrapper -->
   <!-- #Content -->
   <!-- Footer -->
     <footer id="footer" class="page-footer invisble font-small animated elegant-color-dark w-100" style="position: absolute; bottom: 0; visibility: hidden;">
       <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2020
-          <a href="https://sinclair.gq/pages/contact.html">Cobalt</a> <a href="https://www.schulerzbistum.de/wws/397985.php" class="btn btn-sm btn-outline-white elegant-color white-text mt-0 mb-0"><i class="fas fa-user-lock"></i> Abmelden</a>
+          <a href="https://sinclair.gq/pages/contact.html">Cobalt</a>
         </div>
       <!-- #Copyright -->
     </footer>
