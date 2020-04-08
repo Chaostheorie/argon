@@ -1,9 +1,10 @@
 {
   "name": "argon",
   "productName": "argon",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "0.1.1",
+  "description": "electron basierter schulerzbistum.de client",
   "main": "dist/main.js",
+  "repository": "https://github.com/chaostheorie/argon",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",

@@ -130,3 +130,6 @@ dmypy.json
 
 # Builds by electron forge
 out/
+
+# Custom
+API.pdf
