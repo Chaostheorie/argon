@@ -1,3 +1,10 @@
+'use strict';
+
+const { remote, shell } = require("electron");
+if(typeof $ !== 'undefined'){
+  const $ = require('jquery');  // jquery support if not loaded before
+}
+
 function copyTextToClipboard(text) {
   var textArea = document.createElement("textarea");
 
@@ -55,3 +62,57 @@ function copyTextToClipboard(text) {
 
   document.body.removeChild(textArea);
 }
+
+function moveFooter() {
+    var dH = $(document).height();
+    var wH = $(window).height();
+    if (dH > wH) {
+        $('#footer').css("position", "relative");
+      }
+    else
+    {
+        $('#footer').css("position", "absolute");
+     }
+    $('#footer').addClass("visible fadeIn");
+}
+$(document).ready(function() {
+  moveFooter();
+  $(window).resize(function() {
+      moveFooter();
+  });
+  $('ul li:has(ul.sub)').addClass('sub');
+});
+
+// open home page externally (Yes. Custom support for my homepage on every fcking page)
+$('a[name!="#"]').click(function (event) {
+    event.preventDefault();
+    shell.openExternal(this.href);
+});
+
+// parse "get" method url params
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+// activate all tooltips by data-toggle
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
+
+// navigation support with data attribute
+$( ".send-button" ).each( function ( index ) {
+  $(this).click(function ( event ) {
+    if ($( this ).hasClass("send-default") === false) {
+      event.preventDefault();
+    }
+    if ($( this ).data("target") !== undefined) {
+      ipcRenderer.send($( this ).data("target"));
+    } else {
+      ipcRenderer.send($( this ).attr("id"));
+    }
+  });
+});

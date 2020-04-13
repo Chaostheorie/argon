@@ -6,9 +6,11 @@
   "main": "dist/main.js",
   "repository": "https://github.com/chaostheorie/argon",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "tsc && electron-forge start",
+    "clean": "rm -rf out dist",
+    "clean-start": "rm -rf out dist && tsc && electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make",
+    "make": "tsc && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts ."
   },
@@ -19,8 +21,11 @@
   },
   "license": "MIT",
   "config": {
+    "icon": "src/images/favicon",
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "src/images/favicon"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -36,7 +41,20 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "productName": "argon",
+          "section": "education",
+          "icon": "src/images/favicon.png",
+          "maintainer": "Cobalt <https://sinclair.gq>",
+          "priority": "optional",
+          "config": {
+            "categories": [
+              "Office",
+              "Utility",
+              "Education"
+            ],
+            "description": "electron basierter schulerzbistum.de client",
+            "homepage": "https://github.com/Chaostheorie/argon"
+          }
         }
       ]
     }
@@ -64,6 +82,7 @@
     "axios": "^0.19.2",
     "electron-squirrel-startup": "^1.0.0",
     "jquery": "^3.4.1",
-    "keytar": "^5.4.0"
+    "keytar": "^5.4.0",
+    "sanitize-html": "^1.23.0"
   }
 }

@@ -132,4 +132,5 @@ dmypy.json
 out/
 
 # Custom
+tmp
 API.pdf

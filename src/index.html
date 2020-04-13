@@ -21,11 +21,12 @@
     <script src="js/popper.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/mdb.min.js" type="text/javascript"></script>
+    <script src="js/custom.js" type="text/javascript"></script>
 
 </head>
 <body>
   <!-- Content -->
-  <div class="container mt-4 text-center">
+  <div class="container my-auto text-center h-100">
     <h1 id="header">Log In</h1>
     <hr>
     <div class="container-fluid">
@@ -37,8 +38,8 @@
         <input class="form-control" type="password" placeholder="Passwort" id="password" />
         <div class="ml-2 mb-2 row">
           <div class="custom-control custom-checkbox custom-control-inline">
-              <input type="checkbox" class="custom-control-input" id="remeber-me">
-              <label class="custom-control-label" for="remeber-me">Errinere mich</label>
+              <input type="checkbox" class="custom-control-input" id="remember-me">
+              <label class="custom-control-label" for="remember-me">Errinere mich</label>
           </div>
         </div>
         <button type="submit" class="elegant-color white-text btn btn-lg" id="submit">Log in</button>
@@ -56,27 +57,6 @@
     </footer>
   <!-- #Footer -->
   <!-- Javascript -->
-  <script>
-  function moveFooter() {
-      var dH = $(document).height();
-      var wH = $(window).height();
-      if (dH > wH) {
-          $('#footer').css("position", "relative");
-        }
-      else
-      {
-          $('#footer').css("position", "absolute");
-       }
-      $('#footer').addClass("visible fadeIn");
-  }
-  $(document).ready(function() {
-    moveFooter();
-    $(window).resize(function() {
-        moveFooter();
-    });
-    $('ul li:has(ul.sub)').addClass('sub');
-  });
-  </script>
   <script src="specific/index.js" type="text/javascript"></script>
   <!-- #Javascript -->
 </body>
