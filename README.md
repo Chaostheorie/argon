@@ -24,7 +24,7 @@ You can execute following scripts (`npm run-script <script>`):
 - clean: `rm -rf out dist` cleanup of old compiled files and packages
 - `clean-start`: `rm -rf out dist && tsc && electron-forge start` combine `clean` and `start`
 - `package`: `electron-forge package` package the application
-- `make`: `tsc && electron-forge make` make the application executables (deb ...) may invoke package if not done before
+- `make`: `tsc && electron-forge make` make the application executable (deb ...) may invoke package if not done before
 - `publish`: `electron-forge publish` not yet implemented
 - `lint`: `eslint --ext .ts .` lint the project and see how I screwed up
 
