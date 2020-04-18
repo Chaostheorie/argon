@@ -27,7 +27,7 @@ $("button[data-slide=folder]").click((evt) => {
     });
   } else {
     ipcRenderer.sendSync("list-files", {
-      real: $( this )
+      real: event.target.attr("id")
     });
   }
 });

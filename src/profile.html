@@ -39,7 +39,7 @@
             </button>
             <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-privat-dropdown">
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-profile" data-target="profile"><i class="fas fa-id-card"></i> Profil</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes"><i class="fas fa-sticky-note"></i> Notizen</button>
+              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes" data-target="notes"><i class="fas fa-sticky-note"></i> Notizen</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-bookmarks"><i class="fas fa-bookmark"></i> Lesezeichen</button>
               <div class="dropdown-divider" class="hr"></div>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-logout"><i class="fas fa-lock"></i> Abmelden</button>
@@ -79,7 +79,7 @@
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-announcements"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
             </div>
           </div>
-          <a id="sidebar-settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+          <a id="sidebar-settings" data-target="settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
             <i class="fas fa-cog"></i> Einstellungen
           </a>
         </div>
@@ -91,28 +91,23 @@
         <div class="card-body">
         <h4 class="card-title">Profil</h4>
         <hr>
-        <input class="form-control" id="profile-name-hr" type="text" placeholder="Anzeigename" required />
         <div class="card-text container">
           <div class="row mb-2">
-            <input class="form-control" id="profile-full-name" placeholder="Vor- und Nachname" required />
+            <input class="form-control" id="profile-fullname" placeholder="Vor- und Nachname" required />
           </div>
           <div class="row mb-2">
             <input class="form-control" type="email" placeholder="E-Mail" id="profile-email"  data-toggle="tooltip" title="Diese Adresse wird zur Passwortrücksetzung benötigt" />
           </div>
           <div class="row mb-2">
             <select class="form-control selectpicker" data-style="btn btn-dark" id="profile-gender" required>
-              <option value=1>männlich</option>
-              <option value=2>weiblich</option>
-              <option value=3>divers</option>
+              <option>männlich</option>
+              <option>weiblich</option>
+              <option>divers</option>
               <option value=4>Keine Angabe</option>
             </select>
           </div>
           <div class="row mb-2">
             <input class="form-control" type="url" placeholder="Webseite" id="profile-webpage" />
-          </div>
-          <div class="row mb-2 md-form">
-            <label for="profile-description">Öffentliche Beschreibung</label>
-            <textarea class="form-control md-textarea" rows="3" id="profile-description"></textarea>
           </div>
         </div>
         <button type="submit" class="btn text-center btn-dark white-text elegant-color mt-2" id="profile-save">Änderungen speichern</button>

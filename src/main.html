@@ -37,7 +37,7 @@
             </button>
             <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-privat-dropdown">
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-profile" data-target="profile"><i class="fas fa-id-card"></i> Profil</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes"><i class="fas fa-sticky-note"></i> Notizen</button>
+              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes" data-target="notes"><i class="fas fa-sticky-note"></i> Notizen</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-bookmarks"><i class="fas fa-bookmark"></i> Lesezeichen</button>
               <div class="dropdown-divider" class="hr"></div>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-logout"><i class="fas fa-lock"></i> Abmelden</button>
@@ -63,7 +63,7 @@
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-files" data-target="files"><i class="fas fa-folder"></i> Datein</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
+              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" data-target="conferences" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
             </div>
           </div>
           <div class="dropdown">
@@ -77,7 +77,7 @@
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-announcements"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
             </div>
           </div>
-          <a id="sidebar-settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+          <a id="sidebar-settings" data-target="settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
             <i class="fas fa-cog"></i> Einstellungen
           </a>
         </div>
@@ -115,7 +115,7 @@
               <button type="button" id="files" class="btn send-button btn-dark white-text elegant-color" data-target="files"><i class="fas fa-folder"></i> Datein</button>
               <button type="button" id="tasks" class="btn send-button btn-dark white-text elegant-color"><i class="fas fa-clipboard"></i> Aufgaben</button>
               <button type="button" id="calendar" class="btn send-button btn-dark white-text elegant-color"><i class="fas fa-calendar"></i> Kalendar</button>
-              <button type="button" id="conferences" class="btn send-button btn-dark white-text elegant-color"><i class="fas fa-chalkboard"></i> Konferenzen</button>
+              <button type="button" id="conferences" class="btn send-button btn-dark white-text elegant-color" data-target="conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
             </div>
           </div>
         </div>

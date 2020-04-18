@@ -1,14 +1,14 @@
 "use strict";
 
 const sanitizier = require("sanitize-html");
-const tmp = remote.getGlobal("tmp");
+let tmp = remote.getGlobal("tmp");
 const user = remote.getGlobal("user");
 
 if(typeof $ !== 'undefined'){
   const $ = require('jquery');  // jquery support if not loaded before
 } // dynamic jquery support
 
-$( "#profile-save" ).click(function (event) {
+$( "#profile-save" ).click(async function (event) {
   event.preventDefault();
   var values = {};
   if ($('.selectpicker').val() === 4) {
@@ -17,24 +17,31 @@ $( "#profile-save" ).click(function (event) {
     values.gender = $(".selectpicker").val();
   }
   $( "input" ).each( function ( index ) {
-      values[$( this ).attr("id").slice(8)] = $( this ).val();
+      values[`${$( this ).attr("id").slice(8)}`] = $( this ).val();
   });
-  var response = ipcRenderer.send("profile-save", values);
-  if (response.code === 1) {
-    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Profile aktualisiert<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
-  } else if (response.code === 2) {
-    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Unerwartetes Verhalten<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
-  }
+  ipcRenderer.send("profile-save", values);
 });
 
-$("#profile-name-hr").val(sanitizier(user.name_hr));
-$("#profile-full-name").val(sanitizier(tmp.fullname));
-$("#profile-email").val(sanitizier(tmp.emailaddress));
-$("#profile-webpage").val(sanitizier(tmp.webpage));
-$("#profile-description").val(sanitizier(tmp.notes));
-if (tmp.gender !== undefined) {
-  $(".selectpicker").val(tmp.gender);
-} else {
-  $(".selectpicker").val(4);
-}
-$('.selectpicker').selectpicker('render');
+ipcRenderer.on("profile-save-reply", (evt, arg) => {
+  if (arg.code === 1) {
+    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Profile aktualisiert<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
+  } else if (arg.code === 2) {
+    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Unerwartetes Verhalten<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
+  }
+  tmp = remote.getGlobal("tmp");
+  update(tmp);
+});
+
+var update = function (tmp) {
+  $("#profile-fullname").val(sanitizier(tmp.fullname));
+  $("#profile-email").val(sanitizier(tmp.emailaddress));
+  $("#profile-webpage").val(sanitizier(tmp.webpage));
+  if (tmp.gender !== undefined) {
+    $(".selectpicker").val(tmp.gender);
+  } else {
+    $(".selectpicker").val(4);
+  }
+  $('.selectpicker').selectpicker('render');
+};
+
+update(tmp);

@@ -125,6 +125,7 @@ let data = JSON.stringify([
 axios
 .post(url, data)
 .then((result: any) => {
+  global.response = result;
   try {
     if (result.data[0].result.return != "FATAL") {
      global.tmp = {
@@ -171,6 +172,52 @@ ipcMain.on('close', (evt, arg) => {
   app.quit()
 })
 
+ipcMain.on("notes", async function (evt: any, arg: any) {
+  let data = JSON.stringify([
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "login",
+      "params": {
+        login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
+      }
+    },
+    {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "set_focus",
+      "params": {
+        "object": "notes",
+      }},
+    {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "get_entries"
+    }
+  ]);
+  axios
+  .post(url, data)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        global.response = result;
+        global.tmp = result.data[2].result;
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/notes.html'));
+      } else {
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback = error or false creds
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
 
 ipcMain.on("profile", async function (event: any, args: any) {
   let data = JSON.stringify([
@@ -200,7 +247,7 @@ ipcMain.on("profile", async function (event: any, args: any) {
   .then((result: any) => {
     try {
       if (result.data[0].result.return != "FATAL") {
-        global.response = data;
+        global.response = result;
         global.tmp = result.data[2].result.profile;
         BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/profile.html'));
       } else {
@@ -222,40 +269,35 @@ ipcMain.on("profile", async function (event: any, args: any) {
 ipcMain.on("profile-save", async function (evt: any, data: any) {
   let i = 2;
   let request = [
-    JSON.stringify({
+    {
       "jsonrpc": "2.0",
       "id": 1,
       "method": "login",
       "params": {
         login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
       }
-    }),
-    JSON.stringify({
+    },
+    {
       "jsonrpc": "2.0",
       "id": 2,
       "method": "set_focus",
       "params": {
         "object": "profile",
-      }})
-    ];
-  for (const [auxiliary, value] of Object.entries(data)) {
-    request.push(JSON.stringify({
+      }},
+    {
       "jsonrpc": "2.0",
-      "id": ++i,
+      "id": 3,
       "method": "set_profile",
-      "params": {
-        auxiliary: value
-      }
-    }));
-  }
+      "params": data
+    }
+    ];
   axios
-  .post(url, request)
+  .post(url, JSON.stringify(request), {proxy: false})
   .then((result: any) => {
     try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = data;
-        global.tmp = null;
-
+      if (result.data[0].result.return !== "FATAL") {
+        global.response = result;
+        global.tmp = result.data[2].result.profile;
         evt.reply("profile-save-reply", {
           code: 1
         })
@@ -325,6 +367,14 @@ ipcMain.on("files", async function (evt: any, args: any) {
     console.log(error);
     BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
   });
+});
+
+ipcMain.on("settings", async function ( evt: any, args: any ) {
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/client.html'));
+});
+
+ipcMain.on("test-request", async function ( evt: any, args: any ) {
+
 });
 
 app.on('activate', () => {
