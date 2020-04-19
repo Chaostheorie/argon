@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/bootstrap-select.min.css" />
     <link rel="stylesheet" href="css/mdb.min.css" type="text/css" />
     <link rel="stylesheet" href="css/custom.css" type="text/css">
+    <link rel="stylesheet" href="specific/notes.css" type="text/css">
 
     <!-- Fonts -->
     <link href="css/font.css" rel="stylesheet">
@@ -24,7 +25,6 @@
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/mdb.min.js" type="text/javascript"></script>
-    <script src="js/addons/masonry.pkgd.min.js" type="text/jscript"></script>
 
 </head>
 <body>
@@ -89,34 +89,33 @@
     <div class="container mt-4">
       <span id="alert"></span>
       <h4>Notizen</h4>
-      <div class="container-fluid" id="notes-container">
-        <div class="grid">
-          <div class="grid-item m-2">
-            <div class="card">
-              <div class="card-header">
-                Featured
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#!" class="btn btn-primary btn-sm">Button</a>
-              </div>
-            </div>
-          </div>
+      <hr>
+      <div class="container-fluid mb-6" id="notes-container" style="min-height: 600px;">
+        <div class="row flex-wrap" id="notes-grid">
         </div>
       </div>
+      <button type="button" class="btn btn-lg elegant-color white-text float m-0 waves-effect" data-toggle="modal" data-target="#modalNotesForm" id="notes-add-trigger"><i class="fas fa-plus"></i></button>
     </div>
   </div>
-  <!-- #content -->
-  <!-- Footer -->
-    <footer id="footer" class="page-footer invisble font-small animated elegant-color-dark w-100" style="position: absolute; bottom: 0; visibility: hidden;">
-      <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">© 2020 Copyright
-          <a href="https://sinclair.gq/pages/contact.html">Cobalt</a> <span id="footer-advanced"></span>
+  <div class="modal fade" id="modalNotesForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <form class="modal-dialog md-form" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <input type="text" class="md-form form-control" id="notes-new-title" placeholder="Titel" />
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      <!-- #Copyright -->
-    </footer>
-  <!-- #Footer -->
+        <div class="m-2">
+          <textarea id="notes-new-text" class="md-textarea form-control" rows="3" placeholder="Text ..."></textarea>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button class="btn btn-block btn-dark white-text elegant-color" id="notes-add-btn">Hinzufügen</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- #content -->
   <!-- Javascript -->
   <script src="js/custom.js" type="text/javascript"></script>
   <script src="js/sidebar.js" type="text/javascript"></script>

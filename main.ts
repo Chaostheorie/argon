@@ -201,8 +201,57 @@ ipcMain.on("notes", async function (evt: any, arg: any) {
     try {
       if (result.data[0].result.return != "FATAL") {
         global.response = result;
-        global.tmp = result.data[2].result;
+        global.tmp = result.data[2].result.entries;
         BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/notes.html'));
+      } else {
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback = error or false creds
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
+
+ipcMain.on("add-note", async function (evt: any, args: any) {
+  let data = JSON.stringify([
+    {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "login",
+      params: {
+        login: global.config.get("login"),
+        password: await keytar.getPassword("argon", global.config.get("login"))
+      }
+    },
+    {
+      jsonrpc: "2.0",
+      id: 2,
+      method: "set_focus",
+      params: {
+        object: "notes",
+      }},
+    {
+      jsonrpc: "2.0",
+      id: 3,
+      method: "add_entry",
+      params: args
+    }
+  ]);
+  axios
+  .post(url, data)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        global.response = result;
+        global.tmp = result.data[2].result.entry;
+        evt.reply("notes-add-reply", {note: global.tmp});
       } else {
         BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
         evt.sender.send("form-recieved", {"has_errors": true});
