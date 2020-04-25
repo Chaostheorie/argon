@@ -6,9 +6,9 @@
   "main": "dist/main.js",
   "repository": "https://github.com/chaostheorie/argon",
   "scripts": {
-    "start": "tsc --removeComments && electron-forge start",
+    "start": "tsc && electron-forge start",
     "clean": "rm -rf out dist",
-    "clean-start": "rm -rf out dist && tsc --removeComments && electron-forge start",
+    "clean-start": "rm -rf out dist && tsc && electron-forge start",
     "package": "electron-forge package",
     "make": "tsc && electron-forge make",
     "publish": "electron-forge publish",
@@ -76,6 +76,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "jquery": "^3.4.1",
     "keytar": "^5.4.0",

@@ -4,6 +4,7 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": true,
+    "removeComments": true,
     "baseUrl": ".",
     "outDir": "dist",
     "moduleResolution": "node",
