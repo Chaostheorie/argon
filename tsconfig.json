@@ -17,6 +17,7 @@
   "include": [
     "src/**/*",
     "main.ts",
-    "store.js"
+    "store.js",
+    "client.js"
   ]
 }

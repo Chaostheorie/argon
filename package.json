@@ -6,9 +6,9 @@
   "main": "dist/main.js",
   "repository": "https://github.com/chaostheorie/argon",
   "scripts": {
-    "start": "tsc && electron-forge start",
+    "start": "tsc --removeComments && electron-forge start",
     "clean": "rm -rf out dist",
-    "clean-start": "rm -rf out dist && tsc && electron-forge start",
+    "clean-start": "rm -rf out dist && tsc --removeComments && electron-forge start",
     "package": "electron-forge package",
     "make": "tsc && electron-forge make",
     "publish": "electron-forge publish",
@@ -74,7 +74,7 @@
     "eslint-plugin-import": "^2.20.2",
     "jrpc2": "^1.0.5",
     "jsonrpc-ts": "^0.2.0",
-    "tsc": "^1.20150623.0",
+    "tslint": "^6.1.1",
     "typescript": "^3.8.3"
   },
   "dependencies": {
