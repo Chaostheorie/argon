@@ -139,6 +139,28 @@
     },
     "set_settings": {
       "description": ""
+    },
+    "get_entries": {
+      "description": "Liest gesamten Inhalt",
+      "params": {
+        "params-optional": {
+          "folder_id": "string",
+          "get_file_download_url": "bool",
+          "get_files": "bool",
+          "get_folders": "bool",
+          "get_root": "bool",
+          "limit": "int",
+          "offset": "int",
+          "recursive": "bool",
+          "search_option": [
+            "word_equals",
+            "word_starts_with",
+            "word_contains",
+            "phrase"
+          ],
+          "search_string": "string"
+        }
+      }
     }
   }
 }

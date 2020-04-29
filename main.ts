@@ -1,10 +1,14 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+const isDev = require('electron-is-dev');
 const axios = require('axios');
 const keytar = require('keytar');
 const url = "https://www.schulerzbistum.de/jsonrpc.php";
 import { Config } from './store.js';
+import { wrapper, xwrapper } from "./helpers.js";
 
+
+// the global properties will eventually be defined with custom types
 declare global {
   namespace NodeJS {
     interface Global {
@@ -13,17 +17,20 @@ declare global {
        user: any;  // user object (retrived on login)
        member: any[];  // member objects (retrived on login)
        config: any;  // config object (see store.tx) (constructed on start)
+       dev: boolean;  // global val of electron-is-dev
     }
   }
 }
 
-// First instantiate the class
+// iniitiate config
 global.config = new Config({
   // We'll call our data file 'user-preferences'
   configName: 'user-preferences',
   defaults: {}
 });
 
+// save dev mode
+global.dev = isDev;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -40,6 +47,10 @@ const createWindow = () => {
       nodeIntegration: true,
     }
   });
+
+  if (global.dev === false) {
+    mainWindow.setMenu(null)
+  }
 
   // maximize window (bootstrap does scaling if resized) and remove menu
   mainWindow.maximize();
@@ -87,43 +98,30 @@ ipcMain.on("logout", async function (event: any, args: any) {
   }
 });
 
-ipcMain.on("log-in", async function log_in(event: any, args: any) {
-let data = JSON.stringify([
-  {
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "login",
-    "params": {
-      login: args["e-mail"], password: args["password"]
+ipcMain.on("log-in", async function (event: any, args: any) {
+const request = await xwrapper( null, {
+  auth: false, // important
+  stringify: true,
+  data: [
+    {
+      method: "login",
+      params: {
+        login: args["e-mail"],
+        password: args["password"]
+      }
+    },
+    {
+      method: "read_quick_messages",
+      object: "messenger"
+    },
+    {
+      method: "get_state",
+      object: "mailbox"
     }
-  },
-  {
-    "jsonrpc": "2.0",
-    "id": 2,
-    "method": "set_focus",
-    "params": {
-      "object": "messenger",
-    }},
-  {
-    "jsonrpc": "2.0",
-    "id": 3,
-    "method": "read_quick_messages"
-  },
-  {
-    "jsonrpc": "2.0",
-    "id": 2,
-    "method": "set_focus",
-    "params": {
-      "object": "mailbox",
-    }},
-  {
-    "jsonrpc": "2.0",
-    "id": 3,
-    "method": "get_state"
-  }
-]);
+  ]
+});
 axios
-.post(url, data)
+.post(url, request)
 .then((result: any) => {
   global.response = result;
   try {
@@ -131,7 +129,6 @@ axios
      global.tmp = {
        "messages": result.data[2].result.messages,
        "mailbox": {
-        "quota": result.data[4].result.quota,
         "unread": result.data[4].result.unread_messages
       }
      }
@@ -173,30 +170,14 @@ ipcMain.on('close', (evt, arg) => {
 })
 
 ipcMain.on("notes", async function (evt: any, arg: any) {
-  let data = JSON.stringify([
-    {
-      "jsonrpc": "2.0",
-      "id": 1,
-      "method": "login",
-      "params": {
-        login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
-      }
-    },
-    {
-      "jsonrpc": "2.0",
-      "id": 2,
-      "method": "set_focus",
-      "params": {
-        "object": "notes",
-      }},
-    {
-      "jsonrpc": "2.0",
-      "id": 3,
-      "method": "get_entries"
-    }
-  ]);
+  const request = await wrapper ( global.config, {
+    method: "get_entries",
+    object: "notes",
+    stringify: true,
+    auth: true
+  });
   axios
-  .post(url, data)
+  .post(url, request)
   .then((result: any) => {
     try {
       if (result.data[0].result.return != "FATAL") {
@@ -220,32 +201,15 @@ ipcMain.on("notes", async function (evt: any, arg: any) {
 });
 
 ipcMain.on("add-note", async function (evt: any, args: any) {
-  let data = JSON.stringify([
-    {
-      jsonrpc: "2.0",
-      id: 1,
-      method: "login",
-      params: {
-        login: global.config.get("login"),
-        password: await keytar.getPassword("argon", global.config.get("login"))
-      }
-    },
-    {
-      jsonrpc: "2.0",
-      id: 2,
-      method: "set_focus",
-      params: {
-        object: "notes",
-      }},
-    {
-      jsonrpc: "2.0",
-      id: 3,
-      method: "add_entry",
-      params: args
-    }
-  ]);
+  const request = await wrapper ( global.config, {
+    method: "add_entry",
+    object: "notes",
+    auth: true,
+    params: args,
+    stringify: true
+  });
   axios
-  .post(url, data)
+  .post(url, request)
   .then((result: any) => {
     try {
       if (result.data[0].result.return != "FATAL") {
@@ -269,30 +233,14 @@ ipcMain.on("add-note", async function (evt: any, args: any) {
 });
 
 ipcMain.on("profile", async function (event: any, args: any) {
-  let data = JSON.stringify([
-    {
-      "jsonrpc": "2.0",
-      "id": 1,
-      "method": "login",
-      "params": {
-        login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
-      }
-    },
-    {
-      "jsonrpc": "2.0",
-      "id": 2,
-      "method": "set_focus",
-      "params": {
-        "object": "profile",
-      }},
-    {
-      "jsonrpc": "2.0",
-      "id": 3,
-      "method": "get_profile"
-    }
-  ]);
+  const request = await wrapper ( global.config, {
+    method: "get_profile",
+    object: "profile",
+    stringify: true,
+    auth: true
+  });
   axios
-  .post(url, data)
+  .post(url, request)
   .then((result: any) => {
     try {
       if (result.data[0].result.return != "FATAL") {
@@ -316,32 +264,15 @@ ipcMain.on("profile", async function (event: any, args: any) {
 });
 
 ipcMain.on("profile-save", async function (evt: any, data: any) {
-  let i = 2;
-  let request = [
-    {
-      "jsonrpc": "2.0",
-      "id": 1,
-      "method": "login",
-      "params": {
-        login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
-      }
-    },
-    {
-      "jsonrpc": "2.0",
-      "id": 2,
-      "method": "set_focus",
-      "params": {
-        "object": "profile",
-      }},
-    {
-      "jsonrpc": "2.0",
-      "id": 3,
-      "method": "set_profile",
-      "params": data
-    }
-    ];
+  const request = await wrapper ( global.config, {
+    method: "set_profile",
+    object: "profile",
+    params: data,
+    stringify: true,
+    auth: true
+  });
   axios
-  .post(url, JSON.stringify(request), {proxy: false})
+  .post(url, request, {proxy: false})
   .then((result: any) => {
     try {
       if (result.data[0].result.return !== "FATAL") {
@@ -367,33 +298,15 @@ ipcMain.on("profile-save", async function (evt: any, data: any) {
 });
 
 ipcMain.on("files", async function (evt: any, args: any) {
-  const request = JSON.stringify([
-    {
-      "jsonrpc": "2.0",
-      "id": 1,
-      "method": "login",
-      "params": {
-        login: global.config.get("login"), password: await keytar.getPassword("argon", global.config.get("login"))
-      }
-    },
-    {
-      "jsonrpc": "2.0",
-      "id": 2,
-      "method": "set_focus",
-      "params": {
-        "object": "files",
-      }
-    },
-    {
-      "jsonrpc": "2.0",
-      "id": 3,
-      "method": "get_entries",
-      "params": {
-        "get_folders": true,
-        "get_root": true
-      }
+  const request = await wrapper ( global.config, {
+    method: "get_entries",
+    object: "files",
+    auth: true,
+    params: {
+      get_folders: true,
+      get_root: true
     }
-  ]);
+  });
   axios
   .post(url, request)
   .then((result: any) => {
@@ -418,12 +331,216 @@ ipcMain.on("files", async function (evt: any, args: any) {
   });
 });
 
-ipcMain.on("settings", async function ( evt: any, args: any ) {
+ipcMain.on("client", async function ( evt: any, args: any ) {
     BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/client.html'));
 });
 
-ipcMain.on("test-request", async function ( evt: any, args: any ) {
+ipcMain.on("contacts", async function (evt: any, args: any) {
+  const request = await wrapper ( global.config, {
+    method: "get_entries",
+    object: "addresses",
+    stringify: true,
+    auth: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        console.log(result.data[2].result);
+        global.response = result;
+        global.tmp = result.data[2].result.entries;
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/contacts.html'));
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
 
+ipcMain.on("test-request", async function ( evt: any, args: any ) {
+  const request = await wrapper ( global.config, {
+    method: args.method,
+    object: args.object,
+    params: args.params,
+    stringify: true,
+    auth: args.auth
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      console.log(result);
+      if (result.data[0].result.return != "FATAL") {
+        global.response = result;
+        global.tmp = result.data[2].result.entries;
+        evt.reply("response", {response: result})
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
+
+
+ipcMain.on("e-mail", async function (evt: any, args: any) {
+  const request = await wrapper ( global.config, {
+    method: "get_folders",
+    object: "mailbox",
+    auth: true,
+    stringify: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        global.response = result;
+        global.tmp = {};
+        global.tmp.folders = [];
+        global.tmp.data = result.data[2].result.folders;
+        for (let i = 0; i < result.data[2].result.folders.length; i++) {
+          global.tmp.folders.push(global.tmp.data[i]);
+          if (global.tmp.data[i].is_inbox) {
+            global.tmp.inbox = global.tmp.data[i].id;
+            global.tmp.current = global.tmp.data[i];
+          } else if (global.tmp.data[i].is_trash) {
+            global.tmp.trash = global.tmp.data[i].id;
+          } else if (global.tmp.data[i].is_drafts) {
+            global.tmp.drafts = global.tmp.data[i].id;
+          } else if (global.tmp.data[i].is_sent) {
+            global.tmp.sent = global.tmp.data[i].id;
+          }
+        }
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/e-mail.html'));
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
+
+ipcMain.on("get-e-mail-folder", async function ( evt: any, args: any ) {
+  let request = await wrapper( global.config, {
+    object: "mailbox",
+    method: "get_messages",
+    params: {
+      folder_id: args.folder
+    },
+    auth: true,
+    stringify: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        global.response = result;
+        global.tmp.mails = result.data[2].result.messages;
+        evt.sender.send("change-folder", {});
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+})
+
+ipcMain.on("view-mail", async function (evt: any, args: any) {
+  let request = await wrapper( global.config, {
+    object: "mailbox",
+    method: "read_message",
+    params: {
+      folder_id: global.tmp.current.id,
+      message_id: args.id
+    },
+    auth: true,
+    stringify: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        evt.reply("view-mail", {mail: result.data[2].result.message});
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
+
+ipcMain.on("delete-e-mails", async function (evt: any, args: any) {
+  console.log(args.methods);
+  let request = await xwrapper( global.config, {
+    data: args.methods,
+    auth: true,
+    stringify: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        evt.reply("view-mail", {mail: result.data[2].result.message});
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
 });
 
 app.on('activate', () => {

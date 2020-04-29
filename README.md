@@ -30,13 +30,13 @@ You can execute following scripts (`npm run-script <script>`):
 
 ### How to build a package
 
-At the moment only `.deb` packages are supported and implemented the `package.json`. You should be able to build `.rpm` packages and all supported [makers from electron-forge]()  (including MacOSX, that broken thing from Microsoft and other linux distros).
+At the moment only `.deb` packages are supported and implemented the `package.json`. You should be able to build `.rpm` packages and all supported [makers from electron-forge]() (including MacOSX, that broken thing from Microsoft and other linux distros).
 
 At least `.rpm` will be supported in the future and MacOSX support is planned for `v.0.1.3`.
 
 _Why is Windows not supported?_
 
-There's no reason to not support it besides the missing resources. To actually package/ compile a package for Windows it is _required_ to run the packaging on windows. I won't do that. If you are running a windows system and are willing to package and test it, do it! But don't expect me to support it in the near future (maybe `v.0.1.8`). MacOSX has the same problem *but* I may be able to get usable access to it *and* it's linux based.
+There's no reason to not support it besides the missing resources. To actually package/ compile a package for Windows it is _required_ to run the packaging on windows. I won't do that. If you are running a windows system and are willing to package and test it, do it! But don't expect me to support it in the near future (maybe `v.0.1.8`). MacOSX has the same problem _but_ I may be able to get usable access to it _and_ it's linux based.
 
 ## Roadmap
 
@@ -69,3 +69,12 @@ There's no reason to not support it besides the missing resources. To actually p
 ## honorable mentions/ Attributions
 
 Menu sidebar design inspired by [Start Bootstrap - Simple Sidebar](https://github.com/BlackrockDigital/startbootstrap-simple-sidebar) from BlackrockDigital.
+
+## WIP
+
+- Mail Client
+- notes
+- address book
+- file client
+- test request client
+- replace axios posts with helper

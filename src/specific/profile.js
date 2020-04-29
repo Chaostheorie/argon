@@ -24,7 +24,7 @@ $( "#profile-save" ).click(async function (event) {
 
 ipcRenderer.on("profile-save-reply", (evt, arg) => {
   if (arg.code === 1) {
-    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Profile aktualisiert<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
+    $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Profil aktualisiert<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
   } else if (arg.code === 2) {
     $( "#alert" ).append("<div class='alert alert-dark' role='alert'>Unerwartetes Verhalten<button type='button' class='close' data-dismiss='alert' aria-label='Close'> <span aria-hidden='true'>&times;</span></button></div>");
   }
