@@ -81,7 +81,6 @@ async function xwrapper ( config, args ) {
   } else {
     let request = [];
   }
-  console.log(`Request ${request}`);
   let part;
   let id = 1;
   for (let i = 0; i < args.data.length; i++) {

@@ -17,9 +17,13 @@ window.alert = alert = null;
 for (var f = 0; f < tmp.folders.length; f++) {
   $("#mail-folder-list").html();
   $("#mail-folder-list").append(`
-    <button type="button" class="btn btn-dark elegant-color white-text btn-block" data-toggle="folder-toggle" data-target="${tmp.folders[f].id}">${tmp.folders[f].name}</button>
+    <button type="button" class="btn btn-dark btn-folder elegant-color white-text btn-block" data-toggle="folder-toggle" data-target="${tmp.folders[f].id}">${tmp.folders[f].name}</button>
     `);
 }
+
+$(".btn-folder").click( (evt) => {
+  ipcRenderer.send("get-e-mail-folder", {folder: evt.target.data("target")});
+});
 
 function update (remote, folders, rupt) {
   $("#folder-labels").html("");
@@ -79,6 +83,8 @@ ipcRenderer.on("view-mail", ( evt, args ) => {
   } else {
     $("#mail-from").html(sanitizier(args.mail.from[0].name));
   }
+  console.log(args.mail.from[0]);
+  $("#mail-from").data("mail", sanitizier(args.mail.from[0].addr));
   if (args.mail.cc === undefined) {
     $("#mail-cc-row").hide();
   } else {
@@ -128,6 +134,40 @@ $("#mail-client-trash").click( ( evt ) => {
 
 $("#client-reload").click( ( evt ) => {
   ipcRenderer.send("get-e-mail-folder", {folder: tmp.current.id})
+});
+
+$("#client-new-mail").click( ( evt ) => {
+  $("#new-subject").val("");
+  $("#new-recipient").val("");
+  $("#new-content").val("");
+  $('#new-mail-modal').modal({focus: true, show: true});
+});
+
+$("#mail-send").click( ( evt ) => {
+  ipcRenderer.send("send-mail", {
+    subject: $("#new-subject").val(),
+    to: $("#new-recipient").val(),
+    body_plain: $("#new-content").val()
+  });
+  $("#new-mail-close").click();
+});
+
+$("#mail-reply").click( ( evt ) => {
+  $("#modalMailView-close").click();
+  $("#new-subject").val(`Re: ${$("#mail-subject").html()}`);
+  $("#new-recipient").val(`${$("#mail-from").data("mail")}`);
+  $("#new-content").val("");
+  $('#new-mail-modal').modal({focus: true, show: true});
+});
+
+ipcRenderer.on("alert", ( evt, args ) => {
+  $("#alert-title").html(args.title);
+  $("#alert-description").html(args.description);
+  $('#alert-modal').modal({focus: true, show: true});
+});
+
+$("#client-settings").click((evt) => {
+  $('#mail-settings-modal').modal({focus: true, show: true});
 });
 
 $(document).ready(() => {

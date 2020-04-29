@@ -543,6 +543,37 @@ ipcMain.on("delete-e-mails", async function (evt: any, args: any) {
   });
 });
 
+ipcMain.on("send-mail", async function (evt: any, args: any) {
+  console.log(args.methods);
+  let request = await wrapper( global.config, {
+    method: "send_mail",
+    object: "mailbox",
+    params: args,
+    auth: true,
+    stringify: true
+  });
+  axios
+  .post(url, request)
+  .then((result: any) => {
+    try {
+      if (result.data[0].result.return != "FATAL") {
+        evt.reply("alert", {title: "E-Mail gesendet", description: "Deine E-Mail wurde erfolgreich versendet"});
+      } else {  // auth fallback
+        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+        evt.sender.send("form-recieved", {"has_errors": true});
+      }
+    // fallback for unexpected behaviour (also known as error)
+    } catch(error) {
+      console.log(error);
+      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+      evt.sender.send("internal-error");
+    }})
+  .catch((error: any) => {
+    console.log(error);
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  });
+});
+
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

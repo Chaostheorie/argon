@@ -2,6 +2,10 @@
  * Globals
  */
 
+@font-face {
+ font-family: "Titillium Web";
+ src: url("font/TitilliumWeb-Regular.ttf");
+}
 
 @media (min-width: 48em) {
   html {
@@ -15,6 +19,15 @@ html {
 
 hr, .hr {
    border-top: 1px solid #2E2E2E;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: bold;
 }
 
 .sub {
