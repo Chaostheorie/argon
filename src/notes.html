@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="css/bootstrap-select.min.css" />
     <link rel="stylesheet" href="css/mdb.min.css" type="text/css" />
     <link rel="stylesheet" href="css/custom.css" type="text/css">
-    <link rel="stylesheet" href="specific/notes.css" type="text/css">
 
     <!-- Fonts -->
     <link href="css/font.css" rel="stylesheet">
@@ -64,7 +63,7 @@
             </button>
             <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-tools-dropdown">
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-files" data-targets="files"><i class="fas fa-folder"></i> Datein</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
+              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks" data-target="tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
             </div>
@@ -101,7 +100,8 @@
     </div>
   </div>
   <div class="modal fade" id="modalNotesForm" tabindex="-1" role="dialog" aria-hidden="true">
-    <form class="modal-dialog md-form" role="document">
+    <form class="modal-dialog modal-notify md-form" role="document">
+      <input type="hidden" id="notes-hidden-id" />
       <div class="modal-content">
         <div class="modal-header text-center">
           <input type="text" class="md-form form-control" id="notes-new-title" placeholder="Titel" />

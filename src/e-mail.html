@@ -63,7 +63,7 @@
             </button>
             <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-tools-dropdown">
               <button class="btn-sidebar dropdown-item btn send-button btn btn-sm active elegant-color white-text" id="sidebar-tools-files" data-target="files" type="button"><i class="fas fa-folder"></i> Datein</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
+              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks" data-target="tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
               <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
             </div>
@@ -102,22 +102,26 @@
               class="view view-cascade elegant-color narrower py-2 px-2 mb-3 d-flex justify-content-between align-items-center">
 
               <div>
-                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2 dropdown"  data-toggle="modal" data-target="#mail-folder-modal">
-                  <i class="fas fa-folder" id="folder-dropdown"></i>
-                </button>
-                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-reload">
+                <span data-toggle="tooltip" title="Ordner wechseln">
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2 dropdown"  data-toggle="modal" data-target="#mail-folder-modal">
+                    <i class="fas fa-folder" id="folder-dropdown"></i>
+                  </button>
+                </span>
+                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-reload" data-toggle="tooltip" title="Aktualisieren">
                   <i class="fas fa-sync"></i>
                 </button>
               </div>
 
               <div>
-                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-new-mail">
+                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-new-mail"  data-toggle="tooltip" title="Neue E-Mail schreiben">
                   <i class="fas fa-pencil-alt mt-0"></i>
                 </button>
-                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2 disabled" id="mail-client-trash">
-                  <i class="far fa-trash-alt mt-0"></i>
-                </button>
-                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-settings">
+                <span data-toggle="tooltip" title="Digionline möchte dieses feature für argon nicht freischalten">
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2 disabled" id="mail-client-trash">
+                    <i class="far fa-trash-alt mt-0"></i>
+                  </button>
+                </span>
+                <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2" id="client-settings"  data-toggle="tooltip" title="Einstellungen">
                   <i class="fas fa-cog"></i>
                 </button>
               </div>

@@ -2,10 +2,11 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 const isDev = require('electron-is-dev');
 const axios = require('axios');
+const getUuid = require('uuid-by-string');
 const keytar = require('keytar');
 const url = "https://www.schulerzbistum.de/jsonrpc.php";
 import { Config } from './store.js';
-import { wrapper, xwrapper } from "./helpers.js";
+import { wrapper, xwrapper, request } from "./helpers.js";
 
 
 // the global properties will eventually be defined with custom types
@@ -13,11 +14,11 @@ declare global {
   namespace NodeJS {
     interface Global {
        response: any;  // tmp object for last complete response
-       tmp: any;  // wull hold tmp data that may be refreshed over time (messages etc.)
+       tmp: any;  // will hold shared tmp data e.g. result from response
        user: any;  // user object (retrived on login)
        member: any[];  // member objects (retrived on login)
+       _tmp: any; // will hold shared tmp data for the session should not be fully replaced
        config: any;  // config object (see store.tx) (constructed on start)
-       dev: boolean;  // global val of electron-is-dev
     }
   }
 }
@@ -29,8 +30,11 @@ global.config = new Config({
   defaults: {}
 });
 
+// initiate global._tmp
+global._tmp = {};
+
 // save dev mode
-global.dev = isDev;
+global._tmp.is_dev = isDev;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -48,7 +52,7 @@ const createWindow = () => {
     }
   });
 
-  if (global.dev === false) {
+  if (global._tmp.is_dev === false) {
     mainWindow.setMenu(null)
   }
 
@@ -58,9 +62,6 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
-
-  // Open the DevTools. (uncomment if required)
-  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -94,12 +95,13 @@ ipcMain.on("logout", async function (event: any, args: any) {
     console.log("Clearing up credentials …")
     keytar.deletePassword("argon", global.config.get("login"));
     global.config.remove("login");
+    global._tmp.login = undefined;
     BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
   }
 });
 
 ipcMain.on("log-in", async function (event: any, args: any) {
-const request = await xwrapper( null, {
+const _request = await xwrapper( null, {
   auth: false, // important
   stringify: true,
   data: [
@@ -121,7 +123,7 @@ const request = await xwrapper( null, {
   ]
 });
 axios
-.post(url, request)
+.post(url, _request)
 .then((result: any) => {
   global.response = result;
   try {
@@ -136,16 +138,19 @@ axios
      global.user = result.data[0].result.user;
      if (args["remember-me"] && global.config.get("login") === undefined) {
        console.log("adding creds …")
-       global.config.set("login", args["e-mail"])
+       global.config.set("login", args["e-mail"]);
+       global._tmp.login = args["e-mail"];
        keytar.setPassword('argon', args["e-mail"], args["password"]);
      } else if (args["remember-me"] && global.config.get("login") !== undefined && global.config.get("login") !== args["e-mail"]) {
        console.log("replacing creds …")
        keytar.deletePassword("argon", global.config.get("login"))
        global.config.set("login", args["e-mail"])
+       global._tmp.login = args["e-mail"];
        keytar.setPassword('argon', args["e-mail"], args["password"]);
      } else  if (args["remember-me"] === false) {
        console.log("Clearing up credentials …")
        global.config.remove("login");
+       global._tmp.login = undefined;
        keytar.deletePassword("argon", args["e-mail"]);
      }
      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/main.html'));
@@ -165,140 +170,159 @@ axios
 });
 });
 
-ipcMain.on('close', (evt, arg) => {
+ipcMain.on('close', (event, arg) => {
   app.quit()
 })
 
-ipcMain.on("notes", async function (evt: any, arg: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("notes", async function (event: any, arg: any) {
+  const _request = await wrapper ( global.config, {
     method: "get_entries",
     object: "notes",
     stringify: true,
     auth: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.entries;
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/notes.html'));
-      } else {
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.entries;
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/notes.html'));  });
+});
+
+ipcMain.on("tasks", async function (event: any, arg: any) {
+  let members;
+
+  if (global._tmp.member !== undefined) {
+    members = [{
+      method: "get_entries",
+      object: "tasks",
+      flogin: global._tmp[1],
+    }];
+
+    for (let i = 1; i < global.member.length; i++) {
+      members.push({
+        method: "get_entries",
+        object: "tasks",
+        flogin: global._tmp[i],
+      });
+    }
+  } else {
+    members = [{
+      method: "get_entries",
+      object: "tasks",
+      flogin: global.member[1].login,
+    }];
+
+    for (let i = 1; i < global.member.length; i++) {
+      members.push({
+        method: "get_entries",
+        object: "tasks",
+        flogin: global.member[i].login,
+      });
+    }
+  }
+  
+  const _request = await xwrapper ( global.config, {
+    data: members,
+    stringify: true,
+    auth: true
+  });
+  request(event, url, _request, (event: any, result: any) => {
+    let iterator, group, tasks;
+    for (let i = 4; i < result.data.length; i += 2) {
+      group = result.data[i].result.entries;
+      if (group !== undefined && group.length > 0) {
+        for (let t = 0; t < group.length; t++) {
+          iterator = i/2-1;
+          group[t].name_hr = global.member[iterator].name_hr;
+          group[t].login = global.member[iterator].login;
+          group[t].gid = getUuid(global.member[iterator].login);
+          if (tasks === undefined) {
+            tasks = [group[t]];
+          } else {
+            tasks.push(group[t]);
+          }
+        }
+        if (global._tmp.member === undefined) {
+          global._tmp.member = [global.member[iterator].login];  
+        } else {
+          global._tmp.member.push(global.member[iterator].login);
+        }
       }
-    // fallback = error or false creds
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+    }
+    
+    global.response = result;
+    global.tmp = tasks;
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/tasks.html'));
   });
 });
 
-ipcMain.on("add-note", async function (evt: any, args: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("set-task", async function (event: any, args: any) {
+  let completed;
+  if (args.completed === true) {
+    completed = 1;
+  } else {
+    completed = 0;
+  }
+  const _request = await wrapper ( global.config, {
+    method: "set_entry",
+    object: "tasks",
+    auth: true,
+    params: { completed: completed, id: args.id },
+    stringify: true
+  });
+  console.log(_request);
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+  });
+});
+
+ipcMain.on("add-note", async function (event: any, args: any) {
+  const _request = await wrapper ( global.config, {
     method: "add_entry",
     object: "notes",
     auth: true,
     params: args,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.entry;
-        evt.reply("notes-add-reply", {note: global.tmp});
-      } else {
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback = error or false creds
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.entry;
+    event.reply("notes-add-reply", {note: global.tmp});
   });
 });
 
 ipcMain.on("profile", async function (event: any, args: any) {
-  const request = await wrapper ( global.config, {
+  const _request = await wrapper ( global.config, {
     method: "get_profile",
     object: "profile",
     stringify: true,
     auth: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.profile;
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/profile.html'));
-      } else {
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        event.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback = error or false creds
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      event.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.profile;
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/profile.html'));
   });
 });
 
-ipcMain.on("profile-save", async function (evt: any, data: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("profile-save", async function (event: any, data: any) {
+  const _request = await wrapper ( global.config, {
     method: "set_profile",
     object: "profile",
     params: data,
     stringify: true,
     auth: true
   });
-  axios
-  .post(url, request, {proxy: false})
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return !== "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.profile;
-        evt.reply("profile-save-reply", {
-          code: 1
-        })
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (alias error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.profile;
+    event.reply("profile-save-reply", {
+      code: 1
+    });
   });
 });
 
-ipcMain.on("files", async function (evt: any, args: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("files", async function (event: any, args: any) {
+  const _request = await wrapper ( global.config, {
     method: "get_entries",
     object: "files",
     auth: true,
@@ -307,148 +331,78 @@ ipcMain.on("files", async function (evt: any, args: any) {
       get_root: true
     }
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.entries;
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/files.html'));
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.entries;
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/files.html'));
   });
 });
 
-ipcMain.on("client", async function ( evt: any, args: any ) {
+ipcMain.on("client", async function ( event: any, args: any ) {
     BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/client.html'));
 });
 
-ipcMain.on("contacts", async function (evt: any, args: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("contacts", async function (event: any, args: any) {
+  const _request = await wrapper ( global.config, {
     method: "get_entries",
     object: "addresses",
     stringify: true,
     auth: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        console.log(result.data[2].result);
-        global.response = result;
-        global.tmp = result.data[2].result.entries;
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/contacts.html'));
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.entries;
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/contacts.html'));
   });
 });
 
-ipcMain.on("test-request", async function ( evt: any, args: any ) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("test-request", async function ( event: any, args: any ) {
+  const _request = await wrapper ( global.config, {
     method: args.method,
     object: args.object,
     params: args.params,
     stringify: true,
     auth: args.auth
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      console.log(result);
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = result.data[2].result.entries;
-        evt.reply("response", {response: result})
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = result.data[2].result.entries;
+    event.reply("response", {response: result});
   });
 });
 
 
-ipcMain.on("e-mail", async function (evt: any, args: any) {
-  const request = await wrapper ( global.config, {
+ipcMain.on("e-mail", async function (event: any, args: any) {
+  const _request = await wrapper ( global.config, {
     method: "get_folders",
     object: "mailbox",
     auth: true,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp = {};
-        global.tmp.folders = [];
-        global.tmp.data = result.data[2].result.folders;
-        for (let i = 0; i < result.data[2].result.folders.length; i++) {
-          global.tmp.folders.push(global.tmp.data[i]);
-          if (global.tmp.data[i].is_inbox) {
-            global.tmp.inbox = global.tmp.data[i].id;
-            global.tmp.current = global.tmp.data[i];
-          } else if (global.tmp.data[i].is_trash) {
-            global.tmp.trash = global.tmp.data[i].id;
-          } else if (global.tmp.data[i].is_drafts) {
-            global.tmp.drafts = global.tmp.data[i].id;
-          } else if (global.tmp.data[i].is_sent) {
-            global.tmp.sent = global.tmp.data[i].id;
-          }
-        }
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/e-mail.html'));
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp = {};
+    global.tmp.folders = [];
+    global.tmp.data = result.data[2].result.folders;
+    for (let i = 0; i < result.data[2].result.folders.length; i++) {
+      global.tmp.folders.push(global.tmp.data[i]);
+      if (global.tmp.data[i].is_inbox) {
+        global.tmp.inbox = global.tmp.data[i].id;
+        global.tmp.current = global.tmp.data[i];
+      } else if (global.tmp.data[i].is_trash) {
+        global.tmp.trash = global.tmp.data[i].id;
+      } else if (global.tmp.data[i].is_drafts) {
+        global.tmp.drafts = global.tmp.data[i].id;
+      } else if (global.tmp.data[i].is_sent) {
+        global.tmp.sent = global.tmp.data[i].id;
       }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+    }
+    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/e-mail.html'));
   });
 });
 
-ipcMain.on("get-e-mail-folder", async function ( evt: any, args: any ) {
-  let request = await wrapper( global.config, {
+ipcMain.on("get-e-mail-folder", async function ( event: any, args: any ) {
+  const _request = await wrapper( global.config, {
     object: "mailbox",
     method: "get_messages",
     params: {
@@ -457,32 +411,15 @@ ipcMain.on("get-e-mail-folder", async function ( evt: any, args: any ) {
     auth: true,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        global.response = result;
-        global.tmp.mails = result.data[2].result.messages;
-        evt.sender.send("change-folder", {});
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global.tmp.mails = result.data[2].result.messages;
+    event.sender.send("change-folder", {});
   });
 })
 
-ipcMain.on("view-mail", async function (evt: any, args: any) {
-  let request = await wrapper( global.config, {
+ipcMain.on("view-mail", async function (event: any, args: any) {
+  let _request = await wrapper( global.config, {
     object: "mailbox",
     method: "read_message",
     params: {
@@ -492,85 +429,34 @@ ipcMain.on("view-mail", async function (evt: any, args: any) {
     auth: true,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        evt.reply("view-mail", {mail: result.data[2].result.message});
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    event.reply("view-mail", {mail: result.data[2].result.message});
   });
 });
 
-ipcMain.on("delete-e-mails", async function (evt: any, args: any) {
+ipcMain.on("delete-e-mails", async function (event: any, args: any) {
   console.log(args.methods);
-  let request = await xwrapper( global.config, {
+  let _request = await xwrapper( global.config, {
     data: args.methods,
     auth: true,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        evt.reply("view-mail", {mail: result.data[2].result.message});
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    event.reply("view-mail", {mail: result.data[2].result.message});
   });
 });
 
-ipcMain.on("send-mail", async function (evt: any, args: any) {
+ipcMain.on("send-mail", async function (event: any, args: any) {
   console.log(args.methods);
-  let request = await wrapper( global.config, {
+  const _request = await wrapper( global.config, {
     method: "send_mail",
     object: "mailbox",
     params: args,
     auth: true,
     stringify: true
   });
-  axios
-  .post(url, request)
-  .then((result: any) => {
-    try {
-      if (result.data[0].result.return != "FATAL") {
-        evt.reply("alert", {title: "E-Mail gesendet", description: "Deine E-Mail wurde erfolgreich versendet"});
-      } else {  // auth fallback
-        BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-        evt.sender.send("form-recieved", {"has_errors": true});
-      }
-    // fallback for unexpected behaviour (also known as error)
-    } catch(error) {
-      console.log(error);
-      BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
-      evt.sender.send("internal-error");
-    }})
-  .catch((error: any) => {
-    console.log(error);
-    BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/index.html'));
+  request(event, url, _request, (event: any, result: any) => {
+    event.reply("alert", {title: "E-Mail gesendet", description: "Deine E-Mail wurde erfolgreich versendet"});
   });
 });
 

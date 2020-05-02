@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="no-js" lang="de">
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="fontawesome-free/css/all.css" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="css/mdb.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
+
+    <!-- Fonts -->
+    <link href="css/font.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="js/moment-with-locales.js" type="text/javascript"></script>
+    <script src="js/popper.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap-select.min.js"></script>
+    <script src="js/bootstrap-toggle.min.js"></script>
+    <script src="js/mdb.min.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <!-- Content -->
+
+    <div class="d-flex toggled" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right advanced-dropdown sidebar" id="sidebar-wrapper">
+            <div class="list-group list-group-flush">
+                <div class="dropdown">
+                    <button id="sidebar-profile" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user-circle"></i> Privat
+            </button>
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-privat-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-profile" data-target="profile"><i class="fas fa-id-card"></i> Profil</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes" data-target="notes"><i class="fas fa-sticky-note"></i> Notizen</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-bookmarks"><i class="fas fa-bookmark"></i> Lesezeichen</button>
+                        <div class="dropdown-divider" class="hr"></div>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-logout"><i class="fas fa-lock"></i> Abmelden</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-quit"><i class="fas fa-times"></i> Beenden</button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-communication" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-tty"></i> Kommunikation
+            </button>
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-communication-dropdown">
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" data-target="contacts" id="sidebar-communication-contacts"><i class="fas fa-address-book"></i> Kontakte</button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-chat"><i class="fas fa-comments"></i> Chat <span id="chat-addon"></span></button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-e-mail" data-target="e-mail"><i class="fas fa-envelope"></i> E-Mail <span id="email-addon"></span></button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-messages"><i class="fas fa-bolt"></i> Quickmessages <span id="quick-messages-addon"></span></button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-tools" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-coffee"></i> Produktivität
+            </button>
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-tools-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-files" data-targets="files"><i class="fas fa-folder"></i> Datein</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks" data-target="tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-school" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-chalkboard-teacher"></i> Schule
+            </button>
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-school-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-learning"><i class="fas fa-graduation-cap"></i> Lernen</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-substitution-schedule"><i class="fas fa-th"></i> Vertretungsplan</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-pupil-board-"><i class="fas fa-thumbtack"></i> Schülerboard</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-announcements"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
+                    </div>
+                </div>
+                <a id="sidebar-settings" data-target="settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+                    <i class="fas fa-cog"></i> Einstellungen
+                </a>
+                <a id="sidebar-client" data-target="client" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+                    <i class="fas fa-cog"></i> Test Client
+                </a>
+            </div>
+        </div>
+        <!-- !#sidebar -->
+        <div class="container mt-4">
+            <span id="alert"></span>
+            <h4>Aufgaben</h4>
+            <hr>
+            <div id="main-body" class="container-fluid"></div>
+        </div>
+
+        <!-- #content -->
+        <div class="modal fade" id="modalTaskView" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h2 id="task-title" class="heading"></h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modalMailView-close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+                    </div>
+                    <div class="modal-body mt-0">
+                        <div class="container-fluid">
+                            <div class="row mx-2" id="mail-from-row">
+                                <div class="col-auto">
+                                    <span class="badge badge-dark white-text elegant-color w-100">Begin</span>
+                                </div>
+                                <div class="col" id="task-start-date">
+                                </div>
+                            </div>
+                            <div class="row mx-2" id="mail-date-row">
+                                <div class="col-auto">
+                                    <span class="badge badge-dark white-text elegant-color w-100">Fällig</span>
+                                </div>
+                                <div class="col" id="task-due-date">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="container pb-1 m-0" id="task-description">
+                        </div>
+                    </div>
+                    <div class="modal-footer px-2 rounded-bottom view view-cascade elegant-color d-flex justify-content-between align-items-center py-0">
+                        <div class="text-white btn-outline-white">
+                            Erledigt
+                            <label class="switch ">
+                            <input type="checkbox" class="default" id="task-modal-checkbox">
+                            <span class="slider"></span>
+                          </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Javascript -->
+        <script src="js/custom.js" type="text/javascript"></script>
+        <script src="js/sidebar.js" type="text/javascript"></script>
+        <script src="specific/tasks.js" type="text/javascript"></script>
+        <!-- #Javascript -->
+</body>
+
+</html>

@@ -16,7 +16,7 @@ To change the used instance edit the url (const) in the main.ts to fit your doma
 
 You will need to clone the application with git or download the zip and unpack it.
 
-To get the base dependencies execute `npm install` in the `argon` root folder. You will most likely need a global installation of `tsc` (`npm install -g tsc`) to compile the typescript dependencies. The same may apply (depending on your npm installation) for electron-forge-cli (`npm install -g electron-forge-cli`).
+To get the base dependencies execute `npm install` in the `argon` root folder. You will most likely need a global installation of `tsc` (`npm install -g tsc`) to compile the typescript dependencies and other files. The same may apply (depending on your npm installation) for electron-forge-cli (`npm install -g electron-forge-cli`).
 
 You can execute following scripts (`npm run-script <script>`):
 
@@ -66,7 +66,23 @@ There's no reason to not support it besides the missing resources. To actually p
 - icon (fas fa-dragon)
 - Stable `.deb` release
 
-## honorable mentions/ Attributions
+## Attributions
+
+I don't own any of the below mentioned libraries. These are regulated under their own respective Licenses. For libraries installed with npm applies the same.
+
+[Bootstrap toggle](https://gitbrent.github.io/bootstrap4-toggle/) original designed and built by Min Hur for The New York Times Company | Updated by Brent Ely | Available on GitHub | Licensed MIT
+
+[Bootstrap Select](https://developer.snapappointments.com/bootstrap-select/) maintained by SnapAppointments, caseyjhol, and the community.
+
+[Bootstrap 4](https://getbootstrap.com/) 
+
+[Free Material Design Bootstrap](https://mdbootstrap.com/)
+
+[Free Fontawesome](https://fontawesome.com/)
+
+[Datatables](https://datatables.net/) designed and created by [SpryMedia Ltd.](https://sprymedia.co.uk/) and addons provided by several sources.
+
+The globally used font is Titillium Web designed by Multiple Designers and available under the [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
 
 Menu sidebar design inspired by [Start Bootstrap - Simple Sidebar](https://github.com/BlackrockDigital/startbootstrap-simple-sidebar) from BlackrockDigital.
 
