@@ -266,6 +266,7 @@ ipcMain.on("set-task", async function (event: any, args: any) {
     method: "set_entry",
     object: "tasks",
     auth: true,
+    flogin: args.login,
     params: { completed: completed, id: args.id },
     stringify: true
   });

@@ -36,7 +36,7 @@ function update(tmp) {
         }
         tmp[i].state = state;
         $(`#group-${tmp[i].gid}-body`).append(`
-        <li class="list-group-item container-fluid" data-target="${tmp[i].id}" data-source="${tmp[i].id}-checkbox">
+        <li class="list-group-item container-fluid" data-target="${tmp[i].id}" data-source="${tmp[i].if}-checkbox">
           <div class="row w-100">
             <div class="col-lg">
               ${tmp[i].title}
@@ -45,7 +45,7 @@ function update(tmp) {
               ${date}
             </div>
             <div class="col mr-0 pr-0 float-right align-self-end">
-                <input type="checkbox" class="toggle" id="${tmp[i].id}-checkbox" data-target="${tmp[i].id}" data-size="sm" data-offstyle="elegant-color btn-dark white-text" data-onstyle="elegant-color btn-dark white-text" ${state}>
+                <input type="checkbox" class="toggle" id="${tmp[i].id}-checkbox" data-target="${tmp[i].id}" data-source="${tmp[i].login}" data-size="sm" data-offstyle="elegant-color btn-dark white-text" data-onstyle="elegant-color btn-dark white-text" ${state}>
             </div>
           </div>
         </li>
@@ -110,7 +110,11 @@ $((evt) => {
     let tmp = remote.getGlobal("tmp");
     update(tmp);
     $('input[type=checkbox]').change(function() {
-        ipcRenderer.send("set-task", { "completed": $(this).prop("checked"), id: $(this).data("target") });
+        ipcRenderer.send("set-task", {
+            completed: $(this).prop("checked"),
+            id: $(this).data("target"),
+            login: $(this).data("source")
+        });
     });
     reform(tmp);
 });
