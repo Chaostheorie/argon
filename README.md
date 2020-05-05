@@ -20,13 +20,15 @@ To get the base dependencies execute `npm install` in the `argon` root folder. Y
 
 You can execute following scripts (`npm run-script <script>`):
 
-- start: `tsc && electron-forge start` For running the application
-- clean: `rm -rf out dist` cleanup of old compiled files and packages
+- `start`: `tsc && electron-forge start` For running the application
+- `clean`: `rm -rf out dist` cleanup of old compiled files and packages
 - `clean-start`: `rm -rf out dist && tsc && electron-forge start` combine `clean` and `start`
 - `package`: `electron-forge package` package the application
 - `make`: `tsc && electron-forge make` make the application executable (deb ...) may invoke package if not done before
 - `publish`: `electron-forge publish` not yet implemented
 - `lint`: `eslint --ext .ts .` lint the project and see how I screwed up
+
+For an optimial enviroment I recommend using an IDE like Visual Studio Code or Atom. You will also have a better time with the appropiate extensions (Typescript, npm ...) for your editor.
 
 ### How to build a package
 
@@ -53,10 +55,11 @@ There's no reason to not support it besides the missing resources. To actually p
 
 ### v0.1.2
 
-- background process for messages and e-mails (notifications?)
+- background process for messages and e-mails with notifications
 - improved UX/ UI
-- full functionality for pupils
-- improved processing
+- full basic functionality for pupils
+- optimizing of typescript with interfaces
+- upgrade to newer package versions
 
 ### v0.1.1 [Ongoing]
 
@@ -66,6 +69,7 @@ There's no reason to not support it besides the missing resources. To actually p
 - [X] ~~*get e-mails and send them*~~
 - [ ] manage tasks
 - [ ] Stable `.deb` release
+- [ ] Universal AppImage Release
 
 ## Attributions
 
@@ -89,9 +93,9 @@ Menu sidebar design inspired by [Start Bootstrap - Simple Sidebar](https://githu
 
 ## WIP
 
-- [ ] Mail Client
-- [ ] notes
-- [ ] address book
-- [ ] file client
-- [X] ~~*test request client*~~
+- [ ] Mail Client - 85%
+- [ ] notes - 90%
+- [ ] address book - 50%
+- [ ] file client - 10%
+- [ ] test request client - 60%
 - [X] ~~*replace axios posts with helper*~~
