@@ -60,15 +60,16 @@ There's no reason to not support it besides the missing resources. To actually p
 
 ### v0.1.1 [Ongoing]
 
-- login
-- main menu
-- get e-mails and send them
-- icon (fas fa-dragon)
-- Stable `.deb` release
+- [X] ~~*login*~~
+- [X] ~~*main menu*~~
+- [X] ~~*icon (fas fa-dragon)*~~
+- [X] ~~*get e-mails and send them*~~
+- [ ] manage tasks
+- [ ] Stable `.deb` release
 
 ## Attributions
 
-I don't own any of the below mentioned libraries. These are regulated under their own respective Licenses. For libraries installed with npm applies the same.
+I don't own any of the below mentioned libraries. These are regulated under their own respective Licenses. For all libraries installed with npm the same applies.
 
 [Bootstrap toggle](https://gitbrent.github.io/bootstrap4-toggle/) original designed and built by Min Hur for The New York Times Company | Updated by Brent Ely | Available on GitHub | Licensed MIT
 
@@ -76,7 +77,7 @@ I don't own any of the below mentioned libraries. These are regulated under thei
 
 [Bootstrap 4](https://getbootstrap.com/) 
 
-[Free Material Design Bootstrap](https://mdbootstrap.com/)
+[Free Material Design Bootstrap](https://mdbootstrap.com/) with it's respective addons.
 
 [Free Fontawesome](https://fontawesome.com/)
 
@@ -88,9 +89,9 @@ Menu sidebar design inspired by [Start Bootstrap - Simple Sidebar](https://githu
 
 ## WIP
 
-- Mail Client
-- notes
-- address book
-- file client
-- test request client
-- replace axios posts with helper
+- [ ] Mail Client
+- [ ] notes
+- [ ] address book
+- [ ] file client
+- [X] ~~*test request client*~~
+- [X] ~~*replace axios posts with helper*~~
