@@ -10,13 +10,15 @@ To get documentation on your available endpoints and services for the jsonrpc AP
 
 The interface is for several reasons (mainly the actual userspace) written in German. This will be changed with mutltilang (eng and de) support in `v.0.1.4`.
 
+After installing packages with `npm` remeber to run `rebuild`. The script for Linux/ MacOS differs from the windows script due to the different kinds of execution targets.
+
 To change the used instance edit the url (const) in the main.ts to fit your domain (scheme: `https://HOST/jsonrpc.php` e.g. <https://www.schulerzbistum.de/jsonrpc.php>)
 
 ### How to setup a development environment
 
 You will need to clone the application with git or download the zip and unpack it.
 
-To get the base dependencies execute `npm install` in the `argon` root folder. You will most likely need a global installation of `tsc` (`npm install -g tsc`) to compile the typescript dependencies and other files. The same may apply (depending on your npm installation) for electron-forge-cli (`npm install -g electron-forge-cli`).
+To get the base dependencies execute `npm install` in the `argon` root folder. You will most likely need a global installation of `tsc` (`npm install -g tsc`) to compile the typescript dependencies and other files. The same may apply (depending on your npm installation) for electron-forge-cli (`npm install -g electron-forge-cli`). Remeber to rebuild!
 
 You can execute following scripts (`npm run-script <script>`):
 
@@ -27,6 +29,8 @@ You can execute following scripts (`npm run-script <script>`):
 - `make`: `tsc && electron-forge make` make the application executable (deb ...) may invoke package if not done before
 - `publish`: `electron-forge publish` not yet implemented
 - `lint`: `eslint --ext .ts .` lint the project and see how I screwed up
+- `rebuild-linux`: `./node_modules/.bin/electron-rebuild` rebuild dependencies for *nix based systems
+- `rebuild-windows`: `.\node_modules\.bin\electron-rebuild.cmd` rebuild dependencies for windows based systems
 
 For an optimial enviroment I recommend using an IDE like Visual Studio Code or Atom. You will also have a better time with the appropiate extensions (Typescript, npm ...) for your editor.
 

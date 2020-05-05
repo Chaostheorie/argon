@@ -49,6 +49,7 @@ const createWindow = () => {
     icon: path.join(__dirname, '../src/images/favicon.png'),
     webPreferences: {
       nodeIntegration: true,
+      spellcheck: true
     }
   });
 

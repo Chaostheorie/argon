@@ -17,47 +17,51 @@
     <link href="css/font.css" rel="stylesheet" />
 
     <!-- JS -->
-    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
     <script src="js/popper.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/mdb.min.js" type="text/javascript"></script>
     <script src="js/custom.js" type="text/javascript"></script>
 
 </head>
+
 <body>
-  <!-- Content -->
-  <div class="container my-auto text-center h-100">
-    <h1 id="header">Log In</h1>
-    <hr>
-    <div class="container-fluid">
-      <form class="md-form" id="log-in">
-        <div class="note note-danger animated" id="has_error">
-        <em>Daten nicht in der Datenbank gefunden</em>
+    <!-- Content -->
+    <div class="container my-auto text-center h-100">
+        <h1 id="header">Log In</h1>
+        <hr>
+        <div class="container-fluid">
+            <form class="md-form" id="log-in">
+                <div class="note note-danger animated" id="has_error">
+                    <em>Daten nicht in der Datenbank gefunden</em>
+                </div>
+                <input class="form-control" type="email" placeholder="E-Mail" id="e-mail" spellcheck="false" autofocus/>
+                <input class="form-control" type="password" placeholder="Passwort" id="password" />
+                <div class="ml-2 mb-2 row">
+                    <div class="custom-control custom-checkbox custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="remember-me">
+                        <label class="custom-control-label" for="remember-me">Errinere mich</label>
+                    </div>
+                </div>
+                <button type="submit" class="elegant-color white-text btn btn-lg" id="submit">Log in</button>
+            </form>
         </div>
-        <input class="form-control" type="email" placeholder="E-Mail" id="e-mail" autofocus/>
-        <input class="form-control" type="password" placeholder="Passwort" id="password" />
-        <div class="ml-2 mb-2 row">
-          <div class="custom-control custom-checkbox custom-control-inline">
-              <input type="checkbox" class="custom-control-input" id="remember-me">
-              <label class="custom-control-label" for="remember-me">Errinere mich</label>
-          </div>
-        </div>
-        <button type="submit" class="elegant-color white-text btn btn-lg" id="submit">Log in</button>
-      </form>
     </div>
-  </div>
-  <!-- #Content -->
-  <!-- Footer -->
+    <!-- #Content -->
+    <!-- Footer -->
     <footer id="footer" class="page-footer invisble font-small animated elegant-color-dark w-100" style="position: absolute; bottom: 0; visibility: hidden;">
-      <!-- Copyright -->
+        <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2020
-          <a href="https://sinclair.gq/pages/contact.html">Cobalt</a> <a href="https://www.schulerzbistum.de/wws/397985.php" class="btn btn-sm btn-outline-white elegant-color white-text mt-0 mb-0">Passwort vergessen ?</a>
+            <a href="https://sinclair.gq/pages/contact.html">Cobalt</a> <a href="https://www.schulerzbistum.de/wws/397985.php" class="btn btn-sm btn-outline-white elegant-color white-text mt-0 mb-0">Passwort vergessen ?</a>
         </div>
-      <!-- #Copyright -->
+        <!-- #Copyright -->
     </footer>
-  <!-- #Footer -->
-  <!-- Javascript -->
-  <script src="specific/index.js" type="text/javascript"></script>
-  <!-- #Javascript -->
+    <!-- #Footer -->
+    <!-- Javascript -->
+    <script src="specific/index.js" type="text/javascript"></script>
+    <!-- #Javascript -->
 </body>
+
 </html>

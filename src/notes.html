@@ -19,110 +19,114 @@
     <link href="css/font.css" rel="stylesheet">
 
     <!-- JS -->
-    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
     <script src="js/popper.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/mdb.min.js" type="text/javascript"></script>
 
 </head>
-<body>
-  <!-- Content -->
 
-  <div class="d-flex toggled" id="wrapper">
-    <!-- Sidebar -->
-      <div class="bg-light border-right advanced-dropdown sidebar" id="sidebar-wrapper">
-        <div class="list-group list-group-flush">
-          <div class="dropdown">
-            <button id="sidebar-profile" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<body>
+    <!-- Content -->
+
+    <div class="d-flex toggled" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right advanced-dropdown sidebar" id="sidebar-wrapper">
+            <div class="list-group list-group-flush">
+                <div class="dropdown">
+                    <button id="sidebar-profile" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-user-circle"></i> Privat
             </button>
-            <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-privat-dropdown">
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-profile" data-target="profile"><i class="fas fa-id-card"></i> Profil</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes" data-target="notes"><i class="fas fa-sticky-note"></i> Notizen</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-bookmarks"><i class="fas fa-bookmark"></i> Lesezeichen</button>
-              <div class="dropdown-divider" class="hr"></div>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-logout"><i class="fas fa-lock"></i> Abmelden</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-quit"><i class="fas fa-times"></i> Beenden</button>
-            </div>
-          </div>
-          <div class="dropdown">
-            <button id="sidebar-communication" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-privat-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-profile" data-target="profile"><i class="fas fa-id-card"></i> Profil</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-notes" data-target="notes"><i class="fas fa-sticky-note"></i> Notizen</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-privat-bookmarks"><i class="fas fa-bookmark"></i> Lesezeichen</button>
+                        <div class="dropdown-divider" class="hr"></div>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-logout"><i class="fas fa-lock"></i> Abmelden</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-quit"><i class="fas fa-times"></i> Beenden</button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-communication" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-tty"></i> Kommunikation
             </button>
-            <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-communication-dropdown">
-              <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" data-target="contacts" id="sidebar-communication-contacts"><i class="fas fa-address-book"></i> Kontakte</button>
-              <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-chat"><i class="fas fa-comments"></i> Chat <span id="chat-addon"></span></button>
-              <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-e-mail" data-target="e-mail"><i class="fas fa-envelope"></i> E-Mail <span id="email-addon"></span></button>
-              <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-messages"><i class="fas fa-bolt"></i> Quickmessages <span id="quick-messages-addon"></span></button>
-            </div>
-          </div>
-          <div class="dropdown">
-            <button id="sidebar-tools" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-communication-dropdown">
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" data-target="contacts" id="sidebar-communication-contacts"><i class="fas fa-address-book"></i> Kontakte</button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-chat"><i class="fas fa-comments"></i> Chat <span id="chat-addon"></span></button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-e-mail" data-target="e-mail"><i class="fas fa-envelope"></i> E-Mail <span id="email-addon"></span></button>
+                        <button class="dropdown-item btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar" id="sidebar-communication-messages"><i class="fas fa-bolt"></i> Quickmessages <span id="quick-messages-addon"></span></button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-tools" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-coffee"></i> Produktivität
             </button>
-            <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-tools-dropdown">
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-files" data-targets="files"><i class="fas fa-folder"></i> Datein</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks" data-target="tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
-            </div>
-          </div>
-          <div class="dropdown">
-            <button id="sidebar-school" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-tools-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-files" data-targets="files"><i class="fas fa-folder"></i> Datein</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-tasks" data-target="tasks"><i class="fas fa-clipboard"></i> Aufgaben</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-calendar"><i class="fas fa-calendar"></i> Kalendar</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-tools-conferences"><i class="fas fa-chalkboard"></i> Konferenzen</button>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="sidebar-school" class="list-group-item dropdown-toggle list-group-item-action elegant-color btn send-button btn-dark white-text btn-sidebar mr-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-chalkboard-teacher"></i> Schule
             </button>
-            <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-school-dropdown">
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-learning"><i class="fas fa-graduation-cap"></i> Lernen</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-substitution-schedule"><i class="fas fa-th"></i> Vertretungsplan</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-pupil-board-"><i class="fas fa-thumbtack"></i> Schülerboard</button>
-              <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-announcements"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
+                    <div class="bg-light dropdown-menu d animated sidebar-dropdown" id="sidebar-school-dropdown">
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-learning"><i class="fas fa-graduation-cap"></i> Lernen</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-substitution-schedule"><i class="fas fa-th"></i> Vertretungsplan</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-pupil-board-"><i class="fas fa-thumbtack"></i> Schülerboard</button>
+                        <button class="dropdown-item btn send-button btn-dark white-text elegant-color btn-sm btn-sidebar" id="sidebar-school-announcements"><i class="fas fa-bullhorn"></i> Mitteilungen</button>
+                    </div>
+                </div>
+                <a id="sidebar-settings" data-target="settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+                    <i class="fas fa-cog"></i> Einstellungen
+                </a>
+                <a id="sidebar-client" data-target="client" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
+                    <i class="fas fa-cog"></i> Test Client
+                </a>
             </div>
-          </div>
-          <a id="sidebar-settings" data-target="settings" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
-            <i class="fas fa-cog"></i> Einstellungen
-          </a>
-          <a id="sidebar-client" data-target="client" class="list-group-item list-group-item-action  btn send-button btn-sm btn-dark white-text elegant-color btn-sidebar">
-            <i class="fas fa-cog"></i> Test Client
-          </a>
         </div>
-      </div>
-    <!-- !#sidebar -->
-    <div class="container mt-4">
-      <span id="alert"></span>
-      <h4>Notizen</h4>
-      <hr>
-      <div class="container-fluid mb-6" id="notes-container" style="min-height: 600px;">
-        <div class="row flex-wrap" id="notes-grid">
+        <!-- !#sidebar -->
+        <div class="container mt-4">
+            <span id="alert"></span>
+            <h4>Notizen</h4>
+            <hr>
+            <div class="container-fluid mb-6" id="notes-container" style="min-height: 600px;">
+                <div class="row flex-wrap" id="notes-grid">
+                </div>
+            </div>
+            <button type="button" class="btn btn-lg elegant-color white-text float m-0 waves-effect" data-toggle="modal" data-target="#modalNotesForm" id="notes-add-trigger"><i class="fas fa-plus"></i></button>
         </div>
-      </div>
-      <button type="button" class="btn btn-lg elegant-color white-text float m-0 waves-effect" data-toggle="modal" data-target="#modalNotesForm" id="notes-add-trigger"><i class="fas fa-plus"></i></button>
     </div>
-  </div>
-  <div class="modal fade" id="modalNotesForm" tabindex="-1" role="dialog" aria-hidden="true">
-    <form class="modal-dialog modal-notify md-form" role="document">
-      <input type="hidden" id="notes-hidden-id" />
-      <div class="modal-content">
-        <div class="modal-header text-center">
-          <input type="text" class="md-form form-control" id="notes-new-title" placeholder="Titel" />
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal fade" id="modalNotesForm" tabindex="-1" role="dialog" aria-hidden="true">
+        <form class="modal-dialog modal-notify md-form" role="document">
+            <input type="hidden" id="notes-hidden-id" />
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <input type="text" class="md-form form-control" spellcheck="true" id="notes-new-title" placeholder="Titel" />
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>
-        <div class="m-2">
-          <textarea id="notes-new-text" class="md-textarea form-control" rows="3" placeholder="Text ..."></textarea>
-        </div>
-        <div class="modal-footer d-flex justify-content-center">
-          <button class="btn btn-block btn-dark white-text elegant-color" id="notes-add-btn">Hinzufügen</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <!-- #content -->
-  <!-- Javascript -->
-  <script src="js/custom.js" type="text/javascript"></script>
-  <script src="js/sidebar.js" type="text/javascript"></script>
-  <script src="specific/notes.js" type="text/javascript"></script>
-  <!-- #Javascript -->
+                </div>
+                <div class="m-2">
+                    <textarea id="notes-new-text" spellcheck="true" class="md-textarea form-control" rows="3" placeholder="Text ..."></textarea>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-block btn-dark white-text elegant-color" id="notes-add-btn">Hinzufügen</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- #content -->
+    <!-- Javascript -->
+    <script src="js/custom.js" type="text/javascript"></script>
+    <script src="js/sidebar.js" type="text/javascript"></script>
+    <script src="specific/notes.js" type="text/javascript"></script>
+    <!-- #Javascript -->
 </body>
+
 </html>
