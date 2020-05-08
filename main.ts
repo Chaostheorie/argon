@@ -5,6 +5,7 @@ const axios = require('axios');
 const getUuid = require('uuid-by-string');
 const keytar = require('keytar');
 const url = "https://www.schulerzbistum.de/jsonrpc.php";
+const moment = require("moment");
 import { Config } from './store.js';
 import { wrapper, xwrapper, request } from "./helpers.js";
 
@@ -271,7 +272,6 @@ ipcMain.on("set-task", async function (event: any, args: any) {
     params: { completed: completed, id: args.id },
     stringify: true
   });
-  console.log(_request);
   request(event, url, _request, (event: any, result: any) => {
     global.response = result;
   });
@@ -354,7 +354,22 @@ ipcMain.on("contacts", async function (event: any, args: any) {
   request(event, url, _request, (event: any, result: any) => {
     global.response = result;
     global.tmp = result.data[2].result.entries;
+    global._tmp.contacts = global.tmp;  // for autocomplete with contacts
     BrowserWindow.getFocusedWindow().loadFile(path.join(__dirname, '../src/contacts.html'));
+  });
+});
+
+ipcMain.on("contacts-refresh", async(event: any, args: any) => {
+  const _request = await wrapper ( global.config, {
+    method: "get_entries",
+    object: "addresses",
+    stringify: true,
+    auth: true
+  });
+  request(event, url, _request, (event: any, result: any) => {
+    global.response = result;
+    global._tmp.contacts = {entries: global.tmp, time: moment()};  // for autocomplete with contacts
+    event.reply("contacts-refreshed", {entries: global.tmp})
   });
 });
 
@@ -437,7 +452,6 @@ ipcMain.on("view-mail", async function (event: any, args: any) {
 });
 
 ipcMain.on("delete-e-mails", async function (event: any, args: any) {
-  console.log(args.methods);
   let _request = await xwrapper( global.config, {
     data: args.methods,
     auth: true,
@@ -449,7 +463,6 @@ ipcMain.on("delete-e-mails", async function (event: any, args: any) {
 });
 
 ipcMain.on("send-mail", async function (event: any, args: any) {
-  console.log(args.methods);
   const _request = await wrapper( global.config, {
     method: "send_mail",
     object: "mailbox",

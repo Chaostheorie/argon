@@ -59,11 +59,12 @@ There's no reason to not support it besides the missing resources. To actually p
 
 ### v0.1.2
 
-- background process for messages and e-mails with notifications
-- improved UX/ UI
-- full basic functionality for pupils
-- optimizing of typescript with interfaces
-- upgrade to newer package versions
+- [ ] background process for messages and e-mails with notifications
+- [ ] improved UX/ UI (unspecified)
+- [ ] full basic functionality for pupils
+- [ ] optimizing of typescript with interfaces
+- [ ] upgrade to newer package versions
+- [ ] Universal AppImage Release
 
 ### v0.1.1 [Ongoing]
 
@@ -73,7 +74,6 @@ There's no reason to not support it besides the missing resources. To actually p
 - [X] ~~*get e-mails and send them*~~
 - [ ] manage tasks
 - [ ] Stable `.deb` release
-- [ ] Universal AppImage Release
 
 ## Attributions
 

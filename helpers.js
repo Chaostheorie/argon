@@ -24,7 +24,6 @@ async function wrapper(config, args) {
     } else {
         let data = [];
     }
-    console.log(args.flogin);
     if (args.object !== undefined && args.object !== "global" && args.flogin === undefined) {
         data.push({
             jsonrpc: "2.0",

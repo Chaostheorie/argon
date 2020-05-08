@@ -78,10 +78,12 @@
     },
     "dependencies": {
         "axios": "^0.19.2",
+        "electron-forge-maker-appimage": "^22.6.0",
         "electron-is-dev": "^1.2.0",
         "electron-squirrel-startup": "^1.0.0",
         "jquery": ">=3.5.0",
         "keytar": "^5.4.0",
+        "moment": "^2.25.3",
         "node": "^14.0.0",
         "node-gyp": "^6.1.0",
         "nopt": "^4.0.3",

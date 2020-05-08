@@ -84,14 +84,17 @@ ipcRenderer.on("view-mail", (evt, args) => {
         string += args.mail.from[-1].name;
         $("#mail-from").html(sanitizier(string));
     } else {
-        $("#mail-from").html(sanitizier(args.mail.from[0].name));
+        console.log(Object.keys(args.mail.from));
+        $("#mail-from").html(`<span data-toggle="tooltip" title="${sanitizier(args.mail.from[0].addr)}">${sanitizier(args.mail.from[0].name)}</span>`);
     }
     console.log(args.mail.from[0]);
     $("#mail-from").data("mail", sanitizier(args.mail.from[0].addr));
     if (args.mail.cc === undefined) {
         $("#mail-cc-row").hide();
+        $("#mail-reply-all").hide();
     } else {
         $("#mail-cc-row").show();
+        $("#mail-reply-all").show();
     }
 
     if (args.is_flagged === 1) {
