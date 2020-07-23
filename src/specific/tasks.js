@@ -77,8 +77,6 @@ $('#main-body').on('dblclick', 'li', (evt) => {
     }
     let tmp = remote.getGlobal("tmp");
     tmp = reform(tmp);
-    console.log(tmp);
-    console.log(target.data("target"));
     const t = tmp[target.data("target")];
     $("#task-title").html(t.title);
     $("#task-start-date").html(moment(t.start_date * 1000).format("DD.MM.YYYY"));
@@ -116,5 +114,4 @@ $((evt) => {
             login: $(this).data("source")
         });
     });
-    reform(tmp);
 });

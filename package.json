@@ -89,6 +89,8 @@
         "nopt": "^4.0.3",
         "npm": "^6.14.5",
         "sanitize-html": "^1.23.0",
-        "uuid-by-string": "^3.0.2"
+        "uuid-by-string": "^3.0.2",
+        "tsc": "^1.20150623.0",
+        "types": "^0.1.1"
     }
 }
